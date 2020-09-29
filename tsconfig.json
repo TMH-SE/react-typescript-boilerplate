@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+		"jsx": "react",
+    "module": "commonjs",
+    "target": "es2017",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "importsNotUsedAsValues": "preserve",
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@src/*": ["/*"],
+      "@app": ["app"],
+      "@assets": ["assets"],
+      "@images": ["assets/images"],
+      "@fonts": ["assets/fonts"],
+      "@components": ["components"],
+      "@constants": ["constants"],
+      "@layouts": ["layouts"],
+      "@pages": ["pages"],
+      "@routers": ["routers"],
+      "@tools": ["tools"],
+      "@utils": ["utils"],
+      "@shared": ["shared"]
+    }
+  }
+}
