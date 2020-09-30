@@ -179,8 +179,14 @@ const config: webpack.Configuration = {
           },
           developmentMode && 'style-loader',
           'css-loader',
-          'postcss-loader',
-          'sass-loader'
+          'sass-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: [require('autoprefixer')]
+            }
+          }
         ].filter(Boolean)
       },
       {
@@ -198,6 +204,13 @@ const config: webpack.Configuration = {
           developmentMode && 'style-loader',
           {
             loader: 'css-loader'
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: [require('autoprefixer')]
+            }
           },
           {
             loader: 'less-loader',
@@ -293,7 +306,8 @@ const config: webpack.Configuration = {
     historyApiFallback: {
       disableDotRule: true
     },
-    contentBase: './build',
+    contentBase: resolvePath('dist'),
+    watchContentBase: true,
     host: '0.0.0.0',
     port: PORT,
     hot: true,

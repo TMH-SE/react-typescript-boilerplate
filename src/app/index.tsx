@@ -1,7 +1,9 @@
 import React from 'react'
+import './app.scss'
+import './app.css'
 
 const App: React.FC = () => {
-  return <div>REACT WITH TYPESCRIPT BOILERPLATE</div>
+  return <div className='test'>REACTJS WITH TYPESCRIPT BOILERPLATE</div>
 }
 
 export default App
