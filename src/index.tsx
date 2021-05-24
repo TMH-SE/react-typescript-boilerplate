@@ -1,8 +1,7 @@
-import { hot } from 'react-hot-loader/root'
-import React from 'react'
+import App from '@app'
 import ReactDOM from 'react-dom'
 import { setConfig } from 'react-hot-loader'
-import App from '@app'
+import { hot } from 'react-hot-loader/root'
 
 const Main = hot(App)
 

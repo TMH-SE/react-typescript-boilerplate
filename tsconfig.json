@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-		"jsx": "react",
+		"jsx": "react-jsx",
     "module": "commonjs",
     "target": "es2017",
     "allowSyntheticDefaultImports": true,
@@ -9,19 +9,17 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
-      "@src/*": ["/*"],
       "@app": ["app"],
-      "@assets": ["assets"],
-      "@images": ["assets/images"],
-      "@fonts": ["assets/fonts"],
+      "@assets/*": ["assets/*"],
       "@components": ["components"],
-      "@constants": ["constants"],
+      "@constants/*": ["constants/*"],
       "@layouts": ["layouts"],
-      "@pages": ["pages"],
+      "@pages/*": ["pages/*"],
       "@routers": ["routers"],
-      "@tools": ["tools"],
-      "@utils": ["utils"],
-      "@shared": ["shared"]
+      "@utils/*": ["utils/*"],
+      "@style/*": ["style/*"]
     }
-  }
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
 }
