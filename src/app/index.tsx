@@ -1,8 +1,14 @@
+import AuthProvider from 'provider/auth.provider'
 import { FC } from 'react'
 
-import '@style/app.less'
-import '@style/app.scss'
+import AppRouter from '@/router'
 
-const App: FC = () => <div className="test">REACTJS WITH TYPESCRIPT BOILERPLATE</div>
+import 'style/app'
+
+const App: FC = () => (
+  <AuthProvider>
+    <AppRouter />
+  </AuthProvider>
+)
 
 export default App

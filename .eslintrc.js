@@ -6,6 +6,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:import/typescript',
     'prettier'
   ],
   parserOptions: {
@@ -54,20 +55,29 @@ module.exports = {
     'import/first': 'error',
     'import/newline-after-import': 'error',
     'import/no-duplicates': 'error',
-
-
-
+    'import/extensions': 0,
+    'import/no-cycle': 0,
     'import/no-extraneous-dependencies': 0,
+    'import/no-webpack-loader-syntax': 0,
     'import/no-unresolved': 0,
+    'import/prefer-default-export': 0,
+
     'react/jsx-filename-extension': 0,
+    'react/prop-types': 0,
+    'react/jsx-props-no-spreading': 0,
+
+    'react-hooks/exhaustive-deps': 1,
 
     '@typescript-eslint/triple-slash-reference': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
 
     'no-unused-vars': 0,
     '@typescript-eslint/no-unused-vars': [1, { args: 'none' }],
 
     'no-unused-expressions': 'off',
-    '@typescript-eslint/no-unused-expressions': 2
+    '@typescript-eslint/no-unused-expressions': 2,
+
+    'arrow-body-style': 0
   },
   settings: {
     react: {

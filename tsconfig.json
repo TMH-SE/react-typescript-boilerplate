@@ -9,15 +9,7 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
-      "@app": ["app"],
-      "@assets/*": ["assets/*"],
-      "@components": ["components"],
-      "@constants/*": ["constants/*"],
-      "@layouts": ["layouts"],
-      "@pages/*": ["pages/*"],
-      "@routers": ["routers"],
-      "@utils/*": ["utils/*"],
-      "@style/*": ["style/*"]
+      "@/*": ["./*"]
     }
   },
   "include": ["./src/**/*"],

@@ -24,15 +24,7 @@ const resolveModule = (
 }
 
 const alias = {
-  '@app': resolvePath('src/app'),
-  '@assets': resolvePath('src/assets'),
-  '@components': resolvePath('src/components'),
-  '@constants': resolvePath('src/constants'),
-  '@layouts': resolvePath('src/layouts'),
-  '@pages': resolvePath('src/pages'),
-  '@routers': resolvePath('src/routers'),
-  '@utils': resolvePath('src/utils'),
-  '@style': resolvePath('src/style')
+  '@': resolvePath('src')
 }
 
 export { resolvePath, resolveModule, alias }

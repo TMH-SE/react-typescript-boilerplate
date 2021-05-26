@@ -73,10 +73,7 @@ const config = {
               }
             ]
           ],
-          plugins: [
-            '@babel/plugin-transform-runtime',
-            'react-hot-loader/babel'
-          ]
+          plugins: ['@babel/plugin-transform-runtime', 'react-hot-loader/babel']
         }
       },
       {
@@ -164,19 +161,12 @@ const config = {
   plugins: [
     new CleanWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin({
-      async: true,
-      eslint: {
-        enabled: true,
-        files: './src/**/*.{ts,tsx,js,jsx}'
-      }
+      async: true
     }),
-    new HtmlWebpackPlugin(
-      {
-        
-        inject: true,
-          template: resolvePath('public/index.html')
-      }
-    )
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: resolvePath('public/index.html')
+    })
   ],
   devServer: {
     historyApiFallback: {
