@@ -1,8 +1,7 @@
-import { Button } from '@material-ui/core'
 import { useCallback, useContext } from 'react'
 
 import { LocalStorageItemKeys } from '@/constants/app'
-import { AuthContext } from '@/context'
+import { AuthContext } from '@/context/auth'
 
 const Login = () => {
   const { dispatchAuthAction } = useContext(AuthContext)
@@ -11,16 +10,14 @@ const Login = () => {
     dispatchAuthAction({
       type: 'AUTHENTICATE',
       payload: {
-        isAuthenticated: !!localStorage.getItem(
-          LocalStorageItemKeys.ACCESS_TOKEN
-        )
-      }
+        user: null,
+      },
     })
   }, [dispatchAuthAction])
   return (
-    <Button onClick={handleLogin} variant="contained" color="primary">
+    <button type="button" onClick={handleLogin} color="primary">
       Login
-    </Button>
+    </button>
   )
 }
 

@@ -2,7 +2,7 @@ import { FC, Suspense, useContext } from 'react'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import { FallbackComponent } from '@/components'
-import { AuthContext } from '@/context'
+import { AuthContext } from '@/context/auth'
 
 import ProtectedRouter, { protectedRoutes } from './ProtectedRouter'
 import RestrictedRouter, { restrictedRoutes } from './RestrictedRouter'
@@ -16,8 +16,12 @@ export interface IRoute {
 
 const AppRouter: FC = () => {
   const {
-    authState: { isAuthenticated }
+    authState: { inProcessing, isAuthenticated }
   } = useContext(AuthContext)
+
+  // if (inProcessing) {
+  //   return <FallbackComponent />
+  // }
 
   return (
     <BrowserRouter basename="/">

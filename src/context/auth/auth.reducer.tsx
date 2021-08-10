@@ -1,16 +1,22 @@
+import firebase from 'firebase'
+
 export interface IAuthState {
+  inProcessing: boolean
+  user: firebase.User
   isAuthenticated: boolean
 }
 
 export const initialAuthState: IAuthState = {
-  isAuthenticated: false
+  inProcessing: true,
+  user: null,
+  isAuthenticated: false,
 }
 
 export type AuthAction =
   | {
       type: 'AUTHENTICATE'
       payload: {
-        isAuthenticated: boolean
+        user: firebase.User
       }
     }
   | {
@@ -23,7 +29,12 @@ export const authReducer = (
 ): IAuthState => {
   switch (action.type) {
     case 'AUTHENTICATE':
-      return { ...prevState, isAuthenticated: action.payload.isAuthenticated }
+      return {
+        ...prevState,
+        ...action.payload,
+        isAuthenticated: !!action.payload.user,
+        inProcessing: false,
+      }
     case 'RESET_AUTH_CONTEXT':
       return { ...initialAuthState }
     default:

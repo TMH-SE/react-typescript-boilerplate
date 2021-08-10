@@ -1,7 +1,15 @@
-import { FC, useReducer } from 'react'
+import { createContext, Dispatch , FC, useReducer } from 'react'
 
 import { LocalStorageItemKeys } from '@/constants/app'
-import { AuthContext, authReducer, initialAuthState } from '@/context'
+
+import { AuthAction, authReducer, IAuthState, initialAuthState } from './auth.reducer'
+
+export interface IAuthContext {
+  authState: IAuthState
+  dispatchAuthAction: Dispatch<AuthAction>
+}
+
+export const AuthContext: React.Context<IAuthContext> = createContext(null)
 
 const AuthProvider: FC = ({ children }) => {
   const [authState, dispatchAuthAction] = useReducer(authReducer, {

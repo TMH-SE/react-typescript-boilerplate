@@ -18,8 +18,8 @@ const config: webpack.Configuration = {
   output: {
     path: resolvePath('dist'),
     pathinfo: false,
-    filename: `static/js/[name].[fullhash].bundle.js`,
-    chunkFilename: 'static/js/[name].[chunkhash].chunk.js',
+    filename: `static/js/[id].[fullhash].bundle.js`,
+    chunkFilename: 'static/js/[id].[chunkhash].chunk.js',
     publicPath: '/',
     globalObject: 'this'
   },
@@ -107,6 +107,7 @@ const config: webpack.Configuration = {
           plugins: ['@babel/plugin-transform-runtime']
         }
       },
+      // Todo: Choose one of sass/scss or less
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
@@ -123,12 +124,13 @@ const config: webpack.Configuration = {
             options: {
               postcssOptions: {
                 ident: 'postcss',
-                plugins: ['autoprefixer']
+                plugins: ['tailwindcss', 'autoprefixer']
               }
             }
           }
         ]
       },
+      // Todo: Choose one of sass/scss or less
       {
         test: /\.less$/,
         use: [
@@ -146,7 +148,7 @@ const config: webpack.Configuration = {
             options: {
               postcssOptions: {
                 ident: 'postcss',
-                plugins: ['autoprefixer']
+                plugins: ['tailwindcss', 'autoprefixer']
               }
             }
           },
