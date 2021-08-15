@@ -2,10 +2,10 @@
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
+import * as webpack from 'webpack'
+import WebpackDevServer from 'webpack-dev-server'
 
 import { alias, resolveModule, resolvePath } from './webpack.helper'
-
-import 'webpack'
 
 require('dotenv').config()
 
@@ -19,25 +19,33 @@ const performanceLoaders = [
       workerParallelJobs: 50,
       workerNodeArgs: ['--max-old-space-size=1024'],
       poolRespawn: false,
-      poolTimeout: 2000,
-      poolParallelJobs: 50
-    }
-  }
+      poolTimeout: 5000,
+      poolParallelJobs: 50,
+    },
+  },
 ]
 
-const config = {
+const config: webpack.Configuration & {
+  devServer: WebpackDevServer.Configuration
+} = {
   mode: 'development',
   entry: resolveModule(resolvePath, 'src/index'),
   output: {
     path: resolvePath('dist'),
-    pathinfo: true,
-    filename: `static/js/[name].[fullhash].bundle.js`,
-    chunkFilename: 'static/js/[name].[chunkhash].chunk.js',
+    pathinfo: false,
+    filename: `static/js/[id].bundle.js`,
+    chunkFilename: 'static/js/[id].chunk.js',
     publicPath: '/',
-    globalObject: 'this'
+    globalObject: 'this',
+  },
+  optimization: {
+    runtimeChunk: true,
+    removeAvailableModules: false,
+    removeEmptyChunks: false,
+    splitChunks: false,
   },
   watchOptions: {
-    poll: 1000
+    poll: 1000,
   },
   cache: true,
   devtool: 'eval-cheap-module-source-map',
@@ -45,7 +53,7 @@ const config = {
     modules: [resolvePath('src'), resolvePath('node_modules')],
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias,
-    symlinks: false
+    symlinks: false,
   },
   module: {
     rules: [
@@ -60,117 +68,149 @@ const config = {
             [
               '@babel/preset-react',
               {
-                runtime: 'automatic'
-              }
+                runtime: 'automatic',
+              },
             ],
             '@babel/preset-typescript',
             [
               '@babel/preset-env',
               {
                 targets: {
-                  node: 'current'
-                }
-              }
-            ]
+                  node: 'current',
+                },
+              },
+            ],
           ],
-          plugins: ['@babel/plugin-transform-runtime', 'react-hot-loader/babel']
-        }
-      },
-      {
-        test: /\.(sa|sc|c)ss$/,
-        use: [
-          ...performanceLoaders,
-          'style-loader',
-          'css-loader',
-          'sass-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                ident: 'postcss',
-                plugins: ['autoprefixer']
-              }
-            }
-          }
-        ]
-      },
-      {
-        test: /\.less$/,
-        use: [
-          ...performanceLoaders,
-          'style-loader',
-          {
-            loader: 'css-loader'
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                ident: 'postcss',
-                plugins: ['autoprefixer']
-              }
-            }
-          },
-          {
-            loader: 'less-loader'
-          }
-        ]
+          plugins: [
+            '@babel/plugin-transform-runtime',
+            'react-hot-loader/babel',
+          ],
+        },
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
         include: resolvePath('src/assets/images'),
         use: [
-          ...performanceLoaders,
           {
             loader: 'file-loader',
             options: {
               outputPath: 'static/assets/images',
-              name: '[fullhash].[ext]'
-            }
-          }
-        ]
+              name: '[name].[ext]',
+            },
+          },
+        ],
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         include: resolvePath('src/assets/fonts'),
         use: [
-          ...performanceLoaders,
           {
             loader: 'file-loader',
             options: {
               outputPath: 'static/assets/fonts',
-              name: '[fullhash].[ext]'
-            }
-          }
-        ]
+              name: '[name].[ext]',
+            },
+          },
+        ],
       },
       {
-        test: /\.html$/,
+        test: /\.css$/,
+        include: [resolvePath('src'), resolvePath('node_modules')],
         use: [
           ...performanceLoaders,
+          'style-loader',
+          'css-loader',
           {
-            loader: 'html-loader',
+            loader: 'postcss-loader',
             options: {
-              minimize: true
-            }
-          }
-        ]
-      }
-    ]
+              postcssOptions: {
+                ident: 'postcss',
+                plugins: ['tailwindcss', 'autoprefixer'],
+              },
+            },
+          },
+        ],
+      },
+      /**
+       * Todo: choose one of scss/sass or less.js (CSS preprocessor)
+       * * Needed loaders: style-loader, css-loader, postcss-loader
+       */
+      {
+        test: /\.less$/,
+        include: [resolvePath('src'), resolvePath('node_modules')],
+        use: [
+          ...performanceLoaders,
+          'style-loader',
+          {
+            loader: 'css-loader',
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                ident: 'postcss',
+                plugins: ['tailwindcss', 'autoprefixer'],
+              },
+            },
+          },
+          {
+            loader: 'less-loader',
+          },
+        ],
+      },
+      /**
+       * Todo: choose one of scss/sass or less.js (CSS preprocessor)
+       * * Needed loaders: style-loader, css-loader, sass-loader, postcss-loader
+       */
+      // {
+      //   test: /\.(sa|sc)ss$/,
+      //   use: [
+      //     ...performanceLoaders,
+      //     'style-loader',
+      //     'css-loader',
+      //     'sass-loader',
+      //     {
+      //       loader: 'postcss-loader',
+      //       options: {
+      //         postcssOptions: {
+      //           ident: 'postcss',
+      //           plugins: ['tailwindcss', 'autoprefixer'],
+      //         },
+      //       },
+      //     },
+      //   ],
+      // },
+      /**
+       * Todo: open when you have .html file in src
+       * * Needed loaders: html-loader
+       */
+      // {
+      //   test: /\.html$/,
+      //   use: [
+      //     {
+      //       loader: 'html-loader',
+      //       options: {
+      //         minimize: true,
+      //       },
+      //     },
+      //   ],
+      // },
+    ],
   },
   plugins: [
     new CleanWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin({
-      async: true
+      async: true,
     }),
     new HtmlWebpackPlugin({
       inject: true,
-      template: resolvePath('public/index.html')
-    })
+      template: resolvePath('public/index.html'),
+      favicon: resolvePath('public/favicon.ico'),
+    }),
   ],
   devServer: {
     historyApiFallback: {
-      disableDotRule: true
+      disableDotRule: true,
     },
     contentBase: resolvePath('dist'),
     watchContentBase: true,
@@ -183,11 +223,11 @@ const config = {
     noInfo: true,
     disableHostCheck: true,
     useLocalIp: false,
-    open: true
+    open: true,
   },
   performance: {
-    hints: false
-  }
+    hints: false,
+  },
 }
 
 export default config
