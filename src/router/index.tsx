@@ -16,12 +16,12 @@ export interface IRoute {
 
 const AppRouter: FC = () => {
   const {
-    authState: { inProcessing, isAuthenticated }
+    authState: { inProcessing, isAuthenticated },
   } = useContext(AuthContext)
 
-  // if (inProcessing) {
-  //   return <FallbackComponent />
-  // }
+  if (inProcessing) {
+    return <FallbackComponent />
+  }
 
   return (
     <BrowserRouter basename="/">
@@ -43,7 +43,7 @@ const AppRouter: FC = () => {
                 to={{
                   pathname: isAuthenticated
                     ? protectedRoutes.dashboard.path
-                    : restrictedRoutes.login.path
+                    : restrictedRoutes.login.path,
                 }}
               />
             )}

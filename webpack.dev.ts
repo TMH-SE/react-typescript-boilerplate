@@ -87,9 +87,83 @@ const config: webpack.Configuration & {
           ],
         },
       },
-      // Todo: Choose one of sass/scss or less
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        include: resolvePath('src/assets/images'),
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'static/assets/images',
+              name: '[name].[ext]',
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        include: resolvePath('src/assets/fonts'),
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'static/assets/fonts',
+              name: '[name].[ext]',
+            },
+          },
+        ],
+      },
+      {
+        test: /\.css$/,
+        include: [resolvePath('src'), resolvePath('node_modules')],
+        use: [
+          ...performanceLoaders,
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                ident: 'postcss',
+                plugins: ['tailwindcss', 'autoprefixer'],
+              },
+            },
+          },
+        ],
+      },
+      /**
+       * Todo: choose one of scss/sass or less.js (CSS preprocessor)
+       * * Needed loaders: style-loader, css-loader, postcss-loader
+       */
+      {
+        test: /\.less$/,
+        include: [resolvePath('src'), resolvePath('node_modules')],
+        use: [
+          ...performanceLoaders,
+          'style-loader',
+          {
+            loader: 'css-loader',
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                ident: 'postcss',
+                plugins: ['tailwindcss', 'autoprefixer'],
+              },
+            },
+          },
+          {
+            loader: 'less-loader',
+          },
+        ],
+      },
+      /**
+       * Todo: choose one of scss/sass or less.js (CSS preprocessor)
+       * * Needed loaders: style-loader, css-loader, sass-loader, postcss-loader
+       */
       // {
-      //   test: /\.(sa|sc|c)ss$/,
+      //   test: /\.(sa|sc)ss$/,
       //   use: [
       //     ...performanceLoaders,
       //     'style-loader',
@@ -106,69 +180,21 @@ const config: webpack.Configuration & {
       //     },
       //   ],
       // },
-      // Todo: Choose one of sass/scss or less
-      {
-        test: /\.less$/,
-        use: [
-          ...performanceLoaders,
-          'style-loader',
-          {
-            loader: 'css-loader',
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                ident: 'postcss',
-                plugins: ['tailwindcss','autoprefixer'],
-              },
-            },
-          },
-          {
-            loader: 'less-loader',
-          },
-        ],
-      },
-      {
-        test: /\.(png|svg|jpg|gif)$/,
-        include: resolvePath('src/assets/images'),
-        use: [
-          ...performanceLoaders,
-          {
-            loader: 'file-loader',
-            options: {
-              outputPath: 'static/assets/images',
-              name: '[id].[ext]',
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
-        include: resolvePath('src/assets/fonts'),
-        use: [
-          ...performanceLoaders,
-          {
-            loader: 'file-loader',
-            options: {
-              outputPath: 'static/assets/fonts',
-              name: '[id].[ext]',
-            },
-          },
-        ],
-      },
-      {
-        test: /\.html$/,
-        use: [
-          ...performanceLoaders,
-          {
-            loader: 'html-loader',
-            options: {
-              minimize: true,
-            },
-          },
-        ],
-      },
+      /**
+       * Todo: open when you have .html file in src
+       * * Needed loaders: html-loader
+       */
+      // {
+      //   test: /\.html$/,
+      //   use: [
+      //     {
+      //       loader: 'html-loader',
+      //       options: {
+      //         minimize: true,
+      //       },
+      //     },
+      //   ],
+      // },
     ],
   },
   plugins: [

@@ -1,8 +1,21 @@
-import { createContext, Dispatch , FC, useReducer } from 'react'
+import {
+  createContext,
+  Dispatch,
+  FC,
+  useContext,
+  useEffect,
+  useReducer,
+} from 'react'
 
 import { LocalStorageItemKeys } from '@/constants/app'
 
-import { AuthAction, authReducer, IAuthState, initialAuthState } from './auth.reducer'
+import { FirebaseContext } from '../firebase'
+import {
+  AuthAction,
+  authReducer,
+  IAuthState,
+  initialAuthState,
+} from './auth.reducer'
 
 export interface IAuthContext {
   authState: IAuthState
@@ -12,10 +25,22 @@ export interface IAuthContext {
 export const AuthContext: React.Context<IAuthContext> = createContext(null)
 
 const AuthProvider: FC = ({ children }) => {
+  const { auth } = useContext(FirebaseContext)
   const [authState, dispatchAuthAction] = useReducer(authReducer, {
     ...initialAuthState,
-    isAuthenticated: !!localStorage.getItem(LocalStorageItemKeys.ACCESS_TOKEN)
   })
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(authenticatedUser => {
+      dispatchAuthAction({
+        type: 'AUTHENTICATE',
+        payload: {
+          user: authenticatedUser,
+        },
+      })
+    })
+    return () => unsubscribe()
+  }, [auth])
 
   return (
     <AuthContext.Provider value={{ authState, dispatchAuthAction }}>

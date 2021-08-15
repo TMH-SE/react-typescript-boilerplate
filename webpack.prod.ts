@@ -6,7 +6,7 @@ import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import * as webpack from 'webpack'
 
-import { alias,resolveModule, resolvePath } from './webpack.helper'
+import { alias, resolveModule, resolvePath } from './webpack.helper'
 
 require('dotenv').config()
 
@@ -21,7 +21,7 @@ const config: webpack.Configuration = {
     filename: `static/js/[id].[fullhash].bundle.js`,
     chunkFilename: 'static/js/[id].[chunkhash].chunk.js',
     publicPath: '/',
-    globalObject: 'this'
+    globalObject: 'this',
   },
   optimization: {
     minimize: true,
@@ -30,33 +30,33 @@ const config: webpack.Configuration = {
         parallel: true,
         terserOptions: {
           parse: {
-            ecma: 8
+            ecma: 8,
           },
           compress: {
             ecma: 5,
             warnings: false,
             comparisons: false,
             inline: 2,
-            drop_console: true
+            drop_console: true,
           },
           mangle: {
-            safari10: true
+            safari10: true,
           },
           output: {
             ecma: 5,
             comments: false,
-            ascii_only: true
-          }
-        }
+            ascii_only: true,
+          },
+        },
       }),
       new OptimizeCSSAssetsPlugin({
         cssProcessorOptions: {
-          parser: safePostCssParser
+          parser: safePostCssParser,
         },
         cssProcessorPluginOptions: {
-          preset: ['default', { minifyFontValues: { removeQuotes: false } }]
-        }
-      })
+          preset: ['default', { minifyFontValues: { removeQuotes: false } }],
+        },
+      }),
     ],
     moduleIds: 'deterministic',
     runtimeChunk: 'single',
@@ -65,10 +65,10 @@ const config: webpack.Configuration = {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'all'
-        }
-      }
-    }
+          chunks: 'all',
+        },
+      },
+    },
   },
   cache: true,
   devtool: false,
@@ -76,7 +76,7 @@ const config: webpack.Configuration = {
     modules: [resolvePath('src'), resolvePath('node_modules')],
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias,
-    symlinks: false
+    symlinks: false,
   },
   module: {
     rules: [
@@ -91,71 +91,21 @@ const config: webpack.Configuration = {
             [
               '@babel/preset-react',
               {
-                runtime: 'automatic'
-              }
+                runtime: 'automatic',
+              },
             ],
             '@babel/preset-typescript',
             [
               '@babel/preset-env',
               {
                 targets: {
-                  node: 'current'
-                }
-              }
-            ]
+                  node: 'current',
+                },
+              },
+            ],
           ],
-          plugins: ['@babel/plugin-transform-runtime']
-        }
-      },
-      // Todo: Choose one of sass/scss or less
-      {
-        test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              esModule: true
-            }
-          },
-          'css-loader',
-          'sass-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                ident: 'postcss',
-                plugins: ['tailwindcss', 'autoprefixer']
-              }
-            }
-          }
-        ]
-      },
-      // Todo: Choose one of sass/scss or less
-      {
-        test: /\.less$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              esModule: true
-            }
-          },
-          {
-            loader: 'css-loader'
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                ident: 'postcss',
-                plugins: ['tailwindcss', 'autoprefixer']
-              }
-            }
-          },
-          {
-            loader: 'less-loader'
-          }
-        ]
+          plugins: ['@babel/plugin-transform-runtime'],
+        },
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
@@ -165,10 +115,10 @@ const config: webpack.Configuration = {
             loader: 'file-loader',
             options: {
               outputPath: 'static/assets/images',
-              name: '[fullhash].[ext]'
-            }
-          }
-        ]
+              name: '[fullhash].[ext]',
+            },
+          },
+        ],
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
@@ -178,57 +128,140 @@ const config: webpack.Configuration = {
             loader: 'file-loader',
             options: {
               outputPath: 'static/assets/fonts',
-              name: '[fullhash].[ext]'
-            }
-          }
-        ]
+              name: '[fullhash].[ext]',
+            },
+          },
+        ],
       },
       {
-        test: /\.html$/,
+        test: /\.css$/,
+        include: [resolvePath('src'), resolvePath('node_modules')],
         use: [
           {
-            loader: 'html-loader',
+            loader: MiniCssExtractPlugin.loader,
             options: {
-              minimize: true
-            }
-          }
-        ]
-      }
-    ]
+              esModule: true,
+            },
+          },
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                ident: 'postcss',
+                plugins: ['tailwindcss', 'autoprefixer'],
+              },
+            },
+          },
+        ],
+      },
+      /**
+       * Todo: choose one of scss/sass or less.js (CSS preprocessor)
+       * * Needed loaders: style-loader, css-loader, postcss-loader
+       */
+      {
+        test: /\.less$/,
+        include: [resolvePath('src'), resolvePath('node_modules')],
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              esModule: true,
+            },
+          },
+          {
+            loader: 'css-loader',
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                ident: 'postcss',
+                plugins: ['tailwindcss', 'autoprefixer'],
+              },
+            },
+          },
+          {
+            loader: 'less-loader',
+          },
+        ],
+      },
+      /**
+       * Todo: choose one of scss/sass or less.js (CSS preprocessor)
+       * * Needed loaders: style-loader, css-loader, sass-loader, postcss-loader
+       */
+      // {
+      //   test: /\.(sa|sc|c)ss$/,
+      //   include: resolvePath('src'),
+      //   use: [
+      //     {
+      //       loader: MiniCssExtractPlugin.loader,
+      //       options: {
+      //         esModule: true
+      //       }
+      //     },
+      //     'css-loader',
+      //     'sass-loader',
+      //     {
+      //       loader: 'postcss-loader',
+      //       options: {
+      //         postcssOptions: {
+      //           ident: 'postcss',
+      //           plugins: ['tailwindcss', 'autoprefixer']
+      //         }
+      //       }
+      //     }
+      //   ]
+      // },
+
+      /**
+       * Todo: open when you have .html file in src
+       * * Needed loaders: html-loader
+       */
+      // {
+      //   test: /\.html$/,
+      //   use: [
+      //     {
+      //       loader: 'html-loader',
+      //       options: {
+      //         minimize: true,
+      //       },
+      //     },
+      //   ],
+      // },
+    ],
   },
   plugins: [
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: 'static/css/[id].[fullhash].css',
       chunkFilename: 'static/css/chunk/[chunkhash].css',
-      ignoreOrder: true
+      ignoreOrder: true,
     }),
-    new HtmlWebpackPlugin(
-      {
-        
-        inject: true,
-          template: resolvePath('public/index.html'),
-        minify: {
-            removeComments: true,
-            collapseWhitespace: true,
-            removeRedundantAttributes: true,
-            useShortDoctype: true,
-            removeEmptyAttributes: true,
-            removeStyleLinkTypeAttributes: true,
-            keepClosingSlash: true,
-            minifyJS: true,
-            minifyCSS: true,
-            minifyURLs: true
-          }
-      }
-    )
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: resolvePath('public/index.html'),
+      favicon: resolvePath('public/favicon.ico'),
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
+    }),
   ],
   node: {
-    global: false
+    global: false,
   },
   performance: {
-    hints: false
-  }
+    hints: false,
+  },
 }
 
 export default config

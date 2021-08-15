@@ -13,8 +13,8 @@ export const protectedRoutes: Readonly<Record<ProtectedRoute, IRoute>> = {
   dashboard: {
     component: 'dashboard',
     path: '/dashboard',
-    exact: true
-  }
+    exact: true,
+  },
 }
 
 function ProtectedRouter() {

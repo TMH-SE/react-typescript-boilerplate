@@ -2,30 +2,15 @@
 /// <reference types="react" />
 /// <reference types="react-dom" />
 
-declare module '*.gif' {
-  const src: string
-  export default src
-}
+declare module '*.gif'
 
-declare module '*.jpg' {
-  const src: string
-  export default src
-}
+declare module '*.jpg'
 
-declare module '*.jpeg' {
-  const src: string
-  export default src
-}
+declare module '*.jpeg'
 
-declare module '*.png' {
-  const src: string
-  export default src
-}
+declare module '*.png'
 
-declare module '*.webp' {
-  const src: string
-  export default src
-}
+declare module '*.webp'
 
 declare module '*.svg' {
   import * as React from 'react'
@@ -34,8 +19,8 @@ declare module '*.svg' {
     React.SVGProps<SVGSVGElement> & { title?: string }
   >
 
-  const src: string
-  export default src
+  const value: string
+  export default value
 }
 
 declare module '*.module.css' {
